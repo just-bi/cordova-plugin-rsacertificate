@@ -1,0 +1,127 @@
+<?xml version='1.0' encoding='utf-8'?>
+<plugin id="cordova-plugin-rsacertificate" version="0.0.1" xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android">
+    <name>RSACertificatePlugin</name>
+    <description>Allows importing a RSA certificate holding a private key (.p12) and decrypting data using this RSA private key.</description>
+    <author>Shervin Soleymanpoor</author>
+
+    <repo>https://github.com/just-bi/cordova-plugin-rsacertificate.git</repo>
+    <issues>https://github.com/just-bi.nl/cordova-plugin-rsacertificate/issues</issues>
+
+    <engines>
+        <engine name="cordova" version=">3.0.0" />
+    </engines>
+
+    <dependency id="cordova-plugin-add-swift-support" />
+
+    <js-module name="RSACertificatePlugin" src="www/RSACertificatePlugin.js">
+        <clobbers target="cordova.plugin.rsacertificate" />
+    </js-module>
+
+    <platform name="ios">
+        <preference name="CERTIFICATE_EXTENSION" />
+        <preference name="ENCRYPTEDDATA_EXTENSION" />
+
+        <config-file target="config.xml" parent="/*">
+            <feature name="RSACertificatePlugin">
+                <param name="ios-package" value="RSACertificatePlugin"/>
+            </feature>
+        </config-file>
+
+        <config-file target="config.xml" parent="/*">
+            <preference name="RSACertificateExtension" value="$CERTIFICATE_EXTENSION"/>
+            <preference name="RSAEncryptedFileExtension" value="$ENCRYPTEDDATA_EXTENSION"/>
+            <preference name="BackupWebStorage" value="none"/>
+        </config-file>
+
+
+        <config-file
+                platform="ios"
+                target="*-Info.plist"
+                parent="UTExportedTypeDeclarations">
+            <array>
+                <dict>
+                    <key>UTTypeConformsTo</key>
+                    <array>
+                        <string>public.data</string>
+                    </array>
+                    <key>UTTypeDescription</key>
+                    <string>RSACertificate</string>
+                    <key>UTTypeIdentifier</key>
+                    <string>com.document.certificate.$CERTIFICATE_EXTENSION</string>
+                    <key>UTTypeTagSpecification</key>
+                    <dict>
+                        <key>public.filename-extension</key>
+                        <array>
+                            <string name="custom">$CERTIFICATE_EXTENSION</string>
+                        </array>
+                    </dict>
+                </dict>
+                <dict>
+                    <key>UTTypeConformsTo</key>
+                    <array>
+                        <string>public.data</string>
+                    </array>
+                    <key>UTTypeDescription</key>
+                    <string>EncryptedFile</string>
+                    <key>UTTypeIdentifier</key>
+                    <string>com.document.encrypteddata.$ENCRYPTEDDATA_EXTENSION</string>
+                    <key>UTTypeTagSpecification</key>
+                    <dict>
+                        <key>public.filename-extension</key>
+                        <array>
+                            <string name="custom">$ENCRYPTEDDATA_EXTENSION</string>
+                        </array>
+                    </dict>
+                </dict>
+            </array>
+        </config-file>
+
+        <config-file
+                platform="ios"
+                target="*-Info.plist"
+                parent="CFBundleDocumentTypes">
+            <array>
+                <dict>
+                    <key>CFBundleTypeIconFiles</key>
+                    <array/>
+                    <key>CFBundleTypeName</key>
+                    <string>RSACertificate</string>
+                    <key>CFBundleTypeRole</key>
+                    <string>Editor</string>
+                    <key>LSHandlerRank</key>
+                    <string>Owner</string>
+                    <key>LSItemContentTypes</key>
+                    <array>
+                        <string>com.document.certificate.$CERTIFICATE_EXTENSION</string>
+                    </array>
+                </dict>
+                <dict>
+                    <key>CFBundleTypeIconFiles</key>
+                    <array/>
+                    <key>CFBundleTypeName</key>
+                    <string>EncryptedFile</string>
+                    <key>CFBundleTypeRole</key>
+                    <string>Editor</string>
+                    <key>LSHandlerRank</key>
+                    <string>Owner</string>
+                    <key>LSItemContentTypes</key>
+                    <array>
+                        <string>com.document.encrypteddata.$ENCRYPTEDDATA_EXTENSION</string>
+                    </array>
+                </dict>
+            </array>
+        </config-file>
+
+        <source-file src="src/ios/RSACertificatePlugin.swift" />
+        <source-file src="src/ios/AESHelper.swift" />
+        <source-file src="src/ios/AlertService.swift" />
+        <source-file src="src/ios/ApplicationParameters.swift" />
+        <source-file src="src/ios/FileService.swift" />
+
+
+        <source-file src="src/ios/CryptoSwift" />
+        <source-file src="src/ios/CryptoSwift.xcodeproj" target-dir="./CryptoSwift" />
+        <framework src="Security.framework" />
+        <framework src="src/ios/CryptoSwift.framework" embed="true" custom="true" />
+    </platform>
+</plugin>
