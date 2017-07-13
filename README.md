@@ -37,7 +37,7 @@ make this work, file extensions need to be mapped to the application.
 This mapping is done during the installation of the plugin.
 
 Two variables need to be passed:
-- CERTIFICATE_EXTENSION
+- CERTIFICATE_EXTENSION<br>
   This is the file extension that will be mapped in order to install the
   certificate. When exporting the certificate from the key chain (which
   is explained in [js-rsaencryption](https://github.com/just-bi/js-rsaencryption)) 
@@ -48,7 +48,7 @@ Two variables need to be passed:
   variable. When receiving a file with that extension (via email or via
   safari), the file will be opened into the application.
   
-- ENCRYPTEDDATA_EXTENSION
+- ENCRYPTEDDATA_EXTENSION<br>
   Just like the extension for the certificate, a mapping needs to be
   made for the encrypted data files. This extension needs to differ from
   the certificate extension.
