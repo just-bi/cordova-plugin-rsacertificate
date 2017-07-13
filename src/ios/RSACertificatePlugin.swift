@@ -17,7 +17,7 @@ import CryptoSwift
         self.commandDelegate!.send(
           CDVPluginResult(
             status    : CDVCommandStatus_OK,
-            messageAs : "No new certificate file provided."
+            messageAs : false
           ),
           callbackId: command.callbackId
         )
@@ -33,20 +33,14 @@ import CryptoSwift
           fileExtension : certificateFileExtension
         )
 
-        AlertService.showOKMessage(
-          viewController : self.viewController!,
-          title          : "Import Certificate",
-          message        : "Successfully imported the certificate",
-          onOK           : {_ in
-            self.commandDelegate!.send(
-              CDVPluginResult(
-                status    : CDVCommandStatus_OK,
-                messageAs : message
-              ),
-              callbackId: command.callbackId
-            )
-        }
+        self.commandDelegate!.send(
+          CDVPluginResult(
+            status    : CDVCommandStatus_OK,
+            messageAs : true
+          ),
+          callbackId: command.callbackId
         )
+
         return
       }
 
@@ -408,16 +402,16 @@ import CryptoSwift
       directoryPath : inboxUrl,
       fileExtension : rsaEncryptedFileExtension,
       newLocation   : encryptedFilePath
-    ) == true
-    else {
-      self.commandDelegate!.send(
-        CDVPluginResult(
-          status    : CDVCommandStatus_ERROR,
-          messageAs : "Unable to move the data files from the Inbox folder"
-        ),
-        callbackId: command.callbackId
-      )
-      return
+      ) == true
+      else {
+        self.commandDelegate!.send(
+          CDVPluginResult(
+            status    : CDVCommandStatus_ERROR,
+            messageAs : "Unable to move the data files from the Inbox folder"
+          ),
+          callbackId: command.callbackId
+        )
+        return
     }
 
 
@@ -425,8 +419,7 @@ import CryptoSwift
     if !FileService.fileExists(filePath: encryptedFilePath.path) {
       self.commandDelegate!.send(
         CDVPluginResult(
-          status    : CDVCommandStatus_ERROR,
-          messageAs : "No data file found."
+          status    : CDVCommandStatus_OK
         ),
         callbackId: command.callbackId
       )
