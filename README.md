@@ -98,7 +98,7 @@ Two variables need to be passed:
 
 The plugin can be installed from the master repo using:
 ```bash
-$ cordova plugin add https://github.com/just-bi/cordova-plugin-rsacertificate --variable CERTIFICATE_EXTENSION=jbc --variable ENCRYPTEDDATA_EXTENSION=jbi --nofetch
+$ cordova plugin add https://github.com/just-bi/cordova-plugin-rsacertificate --variable CERTIFICATE_EXTENSION=jbc --variable ENCRYPTEDDATA_EXTENSION=jbi
 ```
 
 
@@ -211,7 +211,7 @@ For security reasons you may need to remove data files or the certificate. The f
 
 - Add the cordova plugin
   ```bash
-  cordova plugin add https://github.com/just-bi/cordova-plugin-rsacertificate --variable CERTIFICATE_EXTENSION=jbc --variable ENCRYPTEDDATA_EXTENSION=jbi --nofetch
+  cordova plugin add https://github.com/just-bi/cordova-plugin-rsacertificate --variable CERTIFICATE_EXTENSION=jbc --variable ENCRYPTEDDATA_EXTENSION=jbi
   ```
 
 - Setup the application authentication
