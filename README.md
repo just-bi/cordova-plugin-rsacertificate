@@ -128,8 +128,16 @@ triggered.
 cordova.plugin.rsacertificate.updateCertificate(
 
   // update of the certificate is done
-  function() {
-    getData()
+  function(newCertificateInstalled) {
+    if (newCertificateInstalled) {
+      cordova.plugin.rsacertificate.deleteDataFiles(
+        function() {
+          alert("Successfully installed the new cerficate!\n\nPlease select a data file and use the Open in... functionality in order to use this application.")
+        }
+      )
+    } else  {
+      getData()
+    }
   }.bind(this), 
   
   // something went wrong during the update of the certificate
@@ -226,8 +234,16 @@ For security reasons you may need to remove data files or the certificate. The f
       // Function to update the certificate to the iOS key-chain
     function updateCertificate() {
       cordova.plugin.rsacertificate.updateCertificate(
-        function () {
-          getData()
+        function (newCertificateInstalled) {
+          if (newCertificateInstalled) {
+            cordova.plugin.rsacertificate.deleteDataFiles(
+              function() {
+                alert("Successfully installed the new cerficate!\n\nPlease select a data file and use the Open in... functionality in order to use this application.")
+              }
+            )
+          } else  {
+            getData()
+          }
         }.bind(this),
         function (errorMessage) {
           alert("Error: " + errorMessage)
