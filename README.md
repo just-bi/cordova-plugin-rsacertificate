@@ -25,7 +25,7 @@ for the encryption of data files using the RSA certificate.
 ## <a name="prerequisites"></a>Prerequisites
 
 - iOS version 10 or later
-- RSA Key Pair (public and private key)
+- RSA Key Pair (public and private key)<br>
   This plugin makes use of RSA encryption. This is a asymmetric algorithm: 
   encryption and decryption is done via different keys. Data is encrypted
   using a RSA public key. The decryption is only possible via the related
