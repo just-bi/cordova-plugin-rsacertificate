@@ -30,15 +30,28 @@ is used to encrypt data can be found in github repository xxx.
 
 ## <a name="installation"></a>Installation (CLI)
 
-The plugin needs to know the extensions that are used for the certificate
-and for the encrypted data file. These can be provided during the
-installation of the plugin. If required, they can be changed later in
-the config.xml file of the cordova application.
+This plugin allows users to install certificates and decrypt files. Both 
+the certificate and the encrypted data files are provided to the
+to the application via the iOS 'Open in...' functionality. In order to
+make this work, file extensions need to be mapped to the application.
+This mapping is done during the installation of the plugin.
 
-Variable | Description | Example
---- | --- | ---
-CERTIFICATE_EXTENSION | Extension used for RSA certificate | jbc
-ENCRYPTEDDATA_EXTENSION | Extension used for the encrypted data file | jbi
+Two variables need to be passed:
+- CERTIFICATE_EXTENSION
+  This is the file extension that will be mapped in order to install the
+  certificate. When exporting the certificate from the key chain (which
+  is explained in [js-rsaencryption](https://github.com/just-bi/js-rsaencryption)) 
+  the file has extension p12. P12 extensions are automatically installed
+  in an internal key-chain which is not accessible in the application.
+  For that reason, the P12 extension should be changed to something
+  else. That 'something else' is what needs to be provided in this
+  variable. When receiving a file with that extension (via email or via
+  safari), the file will be opened into the application.
+  
+- ENCRYPTEDDATA_EXTENSION
+  Just like the extension for the certificate, a mapping needs to be
+  made for the encrypted data files. This extension needs to differ from
+  the certificate extension.
 
 The plugin can be installed from the master repo using:
 ```bash
