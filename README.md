@@ -1,4 +1,4 @@
-# Cordova RSACertificate Plugin
+# Cordova RSA Certificate Plugin
 by [Shervin Soleymanpoor](mailto:shervin.soleymanpoor@just-bi.nl)
 
 ## Index
@@ -16,15 +16,58 @@ iOS applications. This is done by importing a P12 certificate in the
 application key-chain and using this certificate to decrypted the data
 files.
 
-Note that this cordova plugin is one part of the entire solution. Next
-to this part, the part in which the RSA certificate is generated and
-is used to encrypt data can be found in github repository xxx.
+Note that this plugin is only able to decrypt data files using the RSA
+certificate. Refer to repository [JS RSA Encryption](https://github.com/just-bi/js-rsaencryption)
+for the encryption of data files using the RSA certificate.
+
 
 
 ## <a name="prerequisites"></a>Prerequisites
 
-- Minimum iOS version is 10
-- [RSA Certificate and RSA encrypted Data file](https://github.com/just-bi/cordova-plugin-authentication)
+- iOS version 10 or later
+- RSA Key Pair (public and private key)
+  This plugin makes use of RSA encryption. This is a asymmetric algorithm: 
+  encryption and decryption is done via different keys. Data is encrypted
+  using a RSA public key. The decryption is only possible via the related
+  RSA private key. The Cordova Plugin requires this private key in order
+  to decrypt data files. The public key is used in the application that
+  will create the encrypted data files (see repository [JS RSA Encryption](https://github.com/just-bi/js-rsaencryption))
+  
+  There are various ways to retrieve a RSA keypair. Below the steps are 
+  explained which make use of the KeyChain in MacOS to generate a RSA
+  Key-Pair.
+
+  ###### Generate RSA Key Pair via the Key-Chain app in MacOS:
+  1. Open the Keychain Access App on MacOS
+  2. Choose Keychain Access > Certificate Assistant > Create a Certificate.
+  2. Enter a name for the certificate.
+  3. Choose for "Self-Signed" identity type
+  4. Choose for "S/MIME" certificate type
+  5. Check the "Let me override defaults" setting
+  6. In the next screen, set the validity period of the certificate
+  7. In the next screen, enter your certificate information
+  8. Set the key-size to 2048-bits and choose for the RSA algorithm
+  9. In the next screen choose for Key Usage Extension "Key encipherment", uncheck "Signature"
+  10. In the next screen, uncheck "Include extended key usage extension"
+  11. In the next screens, uncheck all options
+  12. Store the certificate in "Login"
+  
+  ###### Export P12 Certificate containing RSA private key:
+  1. Open the Keychain Access App on MacOS
+  2. Select category "Certificates" from the "Login" keychain
+  3. Right mouse-click on the certificate that you just created and select "Export..."
+  4. Save the P12-file to a location on your MacOS. During the export, you will be asked for a password to protect the file.
+  5. Change the extension from .p12 to your preferred extension which later is mapped to your application during the installation of the Cordova plugin (see [Certificate Extension](certificate_extension)). 
+ 
+  Note:<br>
+  Be careful with this file, this contains the private key that is able to decrypt all the data. This file including its password should be kept save.
+  
+  ###### Export RSA public key:
+  1. Open the Keychain Access App on MacOS
+  2. Select category "Keys" from the "Login" keychain
+  3. Select your created public key (key type is 'public key')
+  4. Right mouse-click on the key and select "Export..."
+  5. Save the PEM-file to a location on your MacOS
 
 
 
@@ -37,7 +80,7 @@ make this work, file extensions need to be mapped to the application.
 This mapping is done during the installation of the plugin.
 
 Two variables need to be passed:
-- CERTIFICATE_EXTENSION<br>
+- <a name="certificate_extension"></a>CERTIFICATE_EXTENSION<br>
   This is the file extension that will be mapped in order to install the
   certificate. When exporting the certificate from the key chain (which
   is explained in [js-rsaencryption](https://github.com/just-bi/js-rsaencryption)) 
@@ -57,6 +100,7 @@ The plugin can be installed from the master repo using:
 ```bash
 $ cordova plugin add https://github.com/just-bi/cordova-plugin-rsacertificate --variable CERTIFICATE_EXTENSION=jbc --variable ENCRYPTEDDATA_EXTENSION=jbi --nofetch
 ```
+
 
 
 ## <a name="usage"></a>Usage
