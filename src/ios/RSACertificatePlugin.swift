@@ -301,8 +301,101 @@ import CryptoSwift
 
 
 
+  /**
+   Clean up the application by removing the data files and the certificate
+   **/
+  @objc(cleanup:)
+  public func cleanup(command: CDVInvokedUrlCommand) {
+    self.deleteDataFiles()
+    self.deleteCertificate()
+
+    // Done
+    self.commandDelegate!.send(
+      CDVPluginResult(
+        status    : CDVCommandStatus_OK
+      ),
+      callbackId: command.callbackId
+    )
+  }
 
 
+  /**
+   Delete the data files from the application
+   **/
+  @objc(deleteDataFiles:)
+  public func deleteDataFiles(command: CDVInvokedUrlCommand) {
+    self.deleteDataFiles()
+
+    // Done
+    self.commandDelegate!.send(
+      CDVPluginResult(
+        status    : CDVCommandStatus_OK
+      ),
+      callbackId: command.callbackId
+    )
+  }
+
+
+  /**
+   Delete the certificate from the application
+   **/
+  @objc(deleteCertificate:)
+  public func deleteCertificate(command: CDVInvokedUrlCommand) {
+    self.deleteCertificate()
+
+    // Done
+    self.commandDelegate!.send(
+      CDVPluginResult(
+        status    : CDVCommandStatus_OK
+      ),
+      callbackId: command.callbackId
+    )
+  }
+
+
+  /**
+   Delete the data files from the application
+   **/
+  private func deleteDataFiles() {
+    let rsaEncryptedFileExtension = self.commandDelegate.settings["rsaencryptedfileextension"] as? String ?? "jbi"
+
+    // remove data files from the inbox folder
+    let inboxUrl = FileService.getPathToInboxFolder()
+    _ = FileService.deleteAllFilesInDirectoryByExtension(directoryPath: inboxUrl, fileExtension: rsaEncryptedFileExtension)
+
+    // remove data files from the document folder
+    let documentsUrl =  FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+    _ = FileService.deleteAllFilesInDirectoryByExtension(directoryPath: documentsUrl, fileExtension: rsaEncryptedFileExtension)
+  }
+
+
+  /**
+   Delete the certificate from the application
+   **/
+  private func deleteCertificate() {
+    let certificateFileExtension = self.commandDelegate.settings["rsacertificateextension"] as? String ?? "jbc"
+
+    // remove data files from the inbox folder
+    let inboxUrl = FileService.getPathToInboxFolder()
+    _ = FileService.deleteAllFilesInDirectoryByExtension(directoryPath: inboxUrl, fileExtension: certificateFileExtension)
+
+    // remove certificate from the key-chain
+    let deleteQuery: [String: Any] = [
+      kSecClass               as String: kSecClassKey,
+      kSecAttrType            as String: kSecAttrKeyTypeRSA,
+      kSecAttrKeyClass        as String: kSecAttrKeyClassPrivate,
+      kSecAttrApplicationTag  as String: AppParams.cSecAttrApplicationTag
+    ]
+    SecItemDelete(deleteQuery as CFDictionary)
+
+  }
+
+
+
+
+  /**
+   Decrypt the data file
+   **/
   @objc(decryptFile:)
   public func decryptFile(command: CDVInvokedUrlCommand) {
     let rsaEncryptedFileExtension = self.commandDelegate.settings["rsaencryptedfileextension"] as? String ?? "jbi"

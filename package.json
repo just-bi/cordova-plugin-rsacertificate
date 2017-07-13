@@ -1,5 +1,5 @@
 {
-  "name": "cordova-plugin-certificate",
+  "name": "cordova-plugin-rsacertificate",
   "version": "0.0.1",
   "description": "Allows importing a RSA certificate holding a private key (.p12) and decrypting data using this RSA private key.",
   "homepage": "https://github.com/just-bi/cordova-plugin-rsacertificate",
@@ -15,6 +15,6 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/akofman/cordova-plugin-add-swift-support.git"
+    "url": "https://github.com/just-bi/cordova-plugin-rsacertificate"
   }
 }

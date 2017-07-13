@@ -48,9 +48,7 @@ $ cordova plugin add https://github.com/just-bi/cordova-plugin-rsacertificate --
 
 ## <a name="usage"></a>Usage
 
-
-
-
+The check for new data files should be done everytime the application is started or resumed:
 
 ```js
 document.addEventListener('deviceready', onApplicationStarted, false);
@@ -105,6 +103,42 @@ function getData() {
   );
 }
 ```
+
+For security reasons you may need to remove data files or the certificate. The following functions can be used for that.
+
+- Data Files Only
+  ```js
+  function deleteDataFiles() {
+    cordova.plugin.rsacertificate.deleteDataFiles(
+      function() {
+        // data files are deleted
+      }
+    );
+  }
+  ```
+
+- Certificate Only
+  ```js
+  function deleteCertificate() {
+    cordova.plugin.rsacertificate.deleteCertificate(
+      function() {
+        // certificate is deleted
+      }
+    );
+  }
+  ```
+
+- Both Certificate and Data Files:
+  ```js
+  function cleanUp() {
+    cordova.plugin.rsacertificate.cleanup(
+      function() {
+        // certificate and data files are deleted
+      }
+    );
+  }
+  ```
+
 
 ## <a name="example"></a>Example
 - Bootstap a cordova test application
