@@ -7,27 +7,75 @@ import CryptoSwift
     let certificateFileExtension = self.commandDelegate.settings["rsacertificateextension"] as? String ?? "jbc"
 
 
-    // Verify if a file with the certificate file extension is available in the Inbox folder
-    let inboxUrl = FileService.getPathToInboxFolder()
-    guard let certificateFilePath = FileService.getURLToFirstFileInDirectoryByExtension(
-      directoryPath : inboxUrl,
-      fileExtension : certificateFileExtension
-      )
-      else {
-        self.commandDelegate!.send(
-          CDVPluginResult(
-            status    : CDVCommandStatus_OK,
-            messageAs : false
-          ),
-          callbackId: command.callbackId
+    self.commandDelegate.run(inBackground: {
+
+      // Verify if a file with the certificate file extension is available in the Inbox folder
+      let inboxUrl = FileService.getPathToInboxFolder()
+      guard let certificateFilePath = FileService.getURLToFirstFileInDirectoryByExtension(
+        directoryPath : inboxUrl,
+        fileExtension : certificateFileExtension
         )
-        return
-    }
+        else {
+          self.commandDelegate!.send(
+            CDVPluginResult(
+              status    : CDVCommandStatus_OK,
+              messageAs : false
+            ),
+            callbackId: command.callbackId
+          )
+          return
+      }
 
 
-    // Import the certificate
-    func onImportDone(success: Bool, message: String, retryPossible: Bool) {
-      if success {
+      // Import the certificate
+      func onImportDone(success: Bool, message: String, retryPossible: Bool) {
+        if success {
+          _ = FileService.deleteAllFilesInDirectoryByExtension(
+            directoryPath : inboxUrl,
+            fileExtension : certificateFileExtension
+          )
+
+          self.commandDelegate!.send(
+            CDVPluginResult(
+              status    : CDVCommandStatus_OK,
+              messageAs : true
+            ),
+            callbackId: command.callbackId
+          )
+
+          return
+        }
+
+        if retryPossible {
+          AlertService.showCancelRetryMessage(
+            viewController : self.viewController!,
+            title          : "Password",
+            message        : message,
+            onRetry        : {_ in
+              self.importCertificate(
+                certificateFilePath      : certificateFilePath,
+                certificateFileExtension : certificateFileExtension,
+                onImportDone             : onImportDone
+              )
+          },
+            onCancel : {_ in
+              _ = FileService.deleteAllFilesInDirectoryByExtension(
+                directoryPath : inboxUrl,
+                fileExtension : certificateFileExtension
+              )
+
+              self.commandDelegate!.send(
+                CDVPluginResult(
+                  status    : CDVCommandStatus_ERROR,
+                  messageAs : "Certificate import process canceled by user."
+                ),
+                callbackId: command.callbackId
+              )
+          }
+          )
+          return
+        }
+
         _ = FileService.deleteAllFilesInDirectoryByExtension(
           directoryPath : inboxUrl,
           fileExtension : certificateFileExtension
@@ -35,67 +83,23 @@ import CryptoSwift
 
         self.commandDelegate!.send(
           CDVPluginResult(
-            status    : CDVCommandStatus_OK,
-            messageAs : true
+            status    : CDVCommandStatus_ERROR,
+            messageAs : message
           ),
           callbackId: command.callbackId
         )
 
-        return
       }
 
-      if retryPossible {
-        AlertService.showCancelRetryMessage(
-          viewController : self.viewController!,
-          title          : "Password",
-          message        : message,
-          onRetry        : {_ in
-            self.importCertificate(
-              certificateFilePath      : certificateFilePath,
-              certificateFileExtension : certificateFileExtension,
-              onImportDone             : onImportDone
-            )
-        },
-          onCancel : {_ in
-            _ = FileService.deleteAllFilesInDirectoryByExtension(
-              directoryPath : inboxUrl,
-              fileExtension : certificateFileExtension
-            )
 
-            self.commandDelegate!.send(
-              CDVPluginResult(
-                status    : CDVCommandStatus_ERROR,
-                messageAs : "Certificate import process canceled by user."
-              ),
-              callbackId: command.callbackId
-            )
-        }
-        )
-        return
-      }
-
-      _ = FileService.deleteAllFilesInDirectoryByExtension(
-        directoryPath : inboxUrl,
-        fileExtension : certificateFileExtension
+      // import the certificate
+      self.importCertificate(
+        certificateFilePath      : certificateFilePath,
+        certificateFileExtension : certificateFileExtension,
+        onImportDone             : onImportDone
       )
 
-      self.commandDelegate!.send(
-        CDVPluginResult(
-          status    : CDVCommandStatus_ERROR,
-          messageAs : message
-        ),
-        callbackId: command.callbackId
-      )
-
-    }
-
-
-    // import the certificate
-    importCertificate(
-      certificateFilePath      : certificateFilePath,
-      certificateFileExtension : certificateFileExtension,
-      onImportDone             : onImportDone
-    )
+    })
   }
 
 
@@ -387,6 +391,10 @@ import CryptoSwift
 
 
 
+
+
+
+
   /**
    Decrypt the data file
    **/
@@ -394,102 +402,167 @@ import CryptoSwift
   public func decryptFile(command: CDVInvokedUrlCommand) {
     let rsaEncryptedFileExtension = self.commandDelegate.settings["rsaencryptedfileextension"] as? String ?? "jbi"
 
-    // move the inbox data file to a generic name
-    let inboxUrl = FileService.getPathToInboxFolder()
-    let documentsUrl =  FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-    let encryptedFilePath = documentsUrl.appendingPathComponent(AppParams.cEncryptedDataFileName + ".\(rsaEncryptedFileExtension)")
-    guard FileService.moveAllFilesInDirectoryWithExtensionToNewLocation(
-      directoryPath : inboxUrl,
-      fileExtension : rsaEncryptedFileExtension,
-      newLocation   : encryptedFilePath
-      ) == true
-      else {
+    let messageFrame = UIView()
+    var activityIndicator = UIActivityIndicatorView()
+    var strLabel = UILabel()
+    let effectView = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
+
+
+    // show decrypting message
+    func showIndicator(_ title: String) {
+      strLabel.removeFromSuperview()
+      activityIndicator.removeFromSuperview()
+      effectView.removeFromSuperview()
+
+      strLabel = UILabel(frame: CGRect(x: 50, y: 0, width: 200, height: 65))
+      strLabel.text = title
+      strLabel.font = UIFont.systemFont(ofSize: 14, weight: UIFontWeightMedium)
+      strLabel.textColor = UIColor(white: 0.9, alpha: 0.7)
+
+
+      effectView.frame = CGRect(
+        x: self.webView.frame.midX - strLabel.frame.width/2,
+        y: self.webView.frame.midY - strLabel.frame.height/2 ,
+        width: 200,
+        height: 65)
+      effectView.layer.cornerRadius = 15
+      effectView.layer.masksToBounds = true
+
+
+      activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .white)
+      activityIndicator.frame = CGRect(x: 0, y: strLabel.frame.height/2 - 23, width: 46, height: 46)
+      activityIndicator.startAnimating()
+
+      effectView.addSubview(activityIndicator)
+      effectView.addSubview(strLabel)
+      self.webView.addSubview(effectView)
+    }
+
+
+    showIndicator("Decrypting File...")
+
+    self.commandDelegate.run(inBackground: {
+
+      // move the inbox data file to a generic name
+      let inboxUrl = FileService.getPathToInboxFolder()
+      let documentsUrl =  FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+      let encryptedFilePath = documentsUrl.appendingPathComponent(AppParams.cEncryptedDataFileName + ".\(rsaEncryptedFileExtension)")
+      guard FileService.moveAllFilesInDirectoryWithExtensionToNewLocation(
+        directoryPath : inboxUrl,
+        fileExtension : rsaEncryptedFileExtension,
+        newLocation   : encryptedFilePath
+        ) == true
+        else {
+          DispatchQueue.main.async {
+            activityIndicator.stopAnimating()
+            activityIndicator.removeFromSuperview()
+          }
+
+          self.commandDelegate!.send(
+            CDVPluginResult(
+              status    : CDVCommandStatus_ERROR,
+              messageAs : "Unable to move the data files from the Inbox folder"
+            ),
+            callbackId: command.callbackId
+          )
+          return
+      }
+
+
+      // check if the data file exists
+      if !FileService.fileExists(filePath: encryptedFilePath.path) {
+        DispatchQueue.main.async {
+          effectView.removeFromSuperview()
+        }
+
         self.commandDelegate!.send(
           CDVPluginResult(
-            status    : CDVCommandStatus_ERROR,
-            messageAs : "Unable to move the data files from the Inbox folder"
+            status    : CDVCommandStatus_OK
           ),
           callbackId: command.callbackId
         )
         return
-    }
+      }
 
 
-    // check if the data file exists
-    if !FileService.fileExists(filePath: encryptedFilePath.path) {
-      self.commandDelegate!.send(
-        CDVPluginResult(
-          status    : CDVCommandStatus_OK
-        ),
-        callbackId: command.callbackId
-      )
-      return
-    }
-
-
-    // read the encrypted file content
-    let encryptedFileContent : String;
-    do {
-      encryptedFileContent = try String(contentsOf: encryptedFilePath, encoding: String.Encoding.utf8)
-    }catch {
-      _ = FileService.deleteFile(filePath: encryptedFilePath.path)
-
-      self.commandDelegate!.send(
-        CDVPluginResult(
-          status    : CDVCommandStatus_ERROR,
-          messageAs : "Unable to read the encrypted file contents."
-        ),
-        callbackId: command.callbackId
-      )
-      return
-    }
-
-
-    // the encrypted file in in JSON format, containing the RSA encrypted AES key and
-    // the message itself which is AES encrypted. Split the RSA encrytped key and the
-    // message
-    let encryptedData = encryptedFileContent.data(using: .utf8)
-    guard let encryptedDictionary : [String: Any] = try? JSONSerialization.jsonObject(with: encryptedData!, options: []) as! [String: Any]
-      else {
+      // read the encrypted file content
+      let encryptedFileContent : String;
+      do {
+        encryptedFileContent = try String(contentsOf: encryptedFilePath, encoding: String.Encoding.utf8)
+      }catch {
         _ = FileService.deleteFile(filePath: encryptedFilePath.path)
+        DispatchQueue.main.async {
+          effectView.removeFromSuperview()
+        }
 
         self.commandDelegate!.send(
           CDVPluginResult(
             status    : CDVCommandStatus_ERROR,
-            messageAs : "Unable to parse the encrypted file."
+            messageAs : "Unable to read the encrypted file contents."
           ),
           callbackId: command.callbackId
         )
         return
-    }
+      }
 
 
-    // decrypt the message
-    let rsaEncryptedAESPassAndIvString = encryptedDictionary["key"] as! String
-    let aesEncryptedMessageString      = encryptedDictionary["text"] as! String
-    let (success, errorMessage, decryptedMessage) = decryptText(rsaEncryptedAESPassAndIvString: rsaEncryptedAESPassAndIvString, aesEncryptedMessageString: aesEncryptedMessageString)
-    if !success {
-      _ = FileService.deleteFile(filePath: encryptedFilePath.path)
+      // the encrypted file in in JSON format, containing the RSA encrypted AES key and
+      // the message itself which is AES encrypted. Split the RSA encrytped key and the
+      // message
+      let encryptedData = encryptedFileContent.data(using: .utf8)
+      guard let encryptedDictionary : [String: Any] = try? JSONSerialization.jsonObject(with: encryptedData!, options: []) as! [String: Any]
+        else {
+          _ = FileService.deleteFile(filePath: encryptedFilePath.path)
+          DispatchQueue.main.async {
+            effectView.removeFromSuperview()
+          }
+
+          self.commandDelegate!.send(
+            CDVPluginResult(
+              status    : CDVCommandStatus_ERROR,
+              messageAs : "Unable to parse the encrypted file."
+            ),
+            callbackId: command.callbackId
+          )
+          return
+      }
+
+
+      // decrypt the message
+      let rsaEncryptedAESPassAndIvString = encryptedDictionary["key"] as! String
+      let aesEncryptedMessageString      = encryptedDictionary["text"] as! String
+      let (success, errorMessage, decryptedMessage) = self.decryptText(rsaEncryptedAESPassAndIvString: rsaEncryptedAESPassAndIvString, aesEncryptedMessageString: aesEncryptedMessageString)
+      if !success {
+        _ = FileService.deleteFile(filePath: encryptedFilePath.path)
+        DispatchQueue.main.async {
+          effectView.removeFromSuperview()
+        }
+
+        self.commandDelegate!.send(
+          CDVPluginResult(
+            status    : CDVCommandStatus_ERROR,
+            messageAs : errorMessage
+          ),
+          callbackId: command.callbackId
+        )
+        return
+      }
+
+
+      // parse the JSON object on this part
+      DispatchQueue.main.async {
+        effectView.removeFromSuperview()
+      }
 
       self.commandDelegate!.send(
         CDVPluginResult(
-          status    : CDVCommandStatus_ERROR,
-          messageAs : errorMessage
+          status    : CDVCommandStatus_OK,
+          messageAs : decryptedMessage
         ),
         callbackId: command.callbackId
       )
-      return
-    }
 
-
-
-    self.commandDelegate!.send(
-      CDVPluginResult(
-        status    : CDVCommandStatus_OK,
-        messageAs : decryptedMessage
-      ),
-      callbackId: command.callbackId
-    )
+    })
   }
 
 
