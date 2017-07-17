@@ -122,6 +122,6 @@
         <source-file src="src/ios/CryptoSwift" />
         <source-file src="src/ios/CryptoSwift.xcodeproj" target-dir="./CryptoSwift" />
         <framework src="Security.framework" />
-        <framework src="src/ios/CryptoSwift.framework" embed="true" />
+        <framework src="src/ios/CryptoSwift.framework" custom="true" />
     </platform>
 </plugin>
