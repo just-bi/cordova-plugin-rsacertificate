@@ -169,6 +169,18 @@ function getData() {
 }
 ```
 
+Showing a message (either for errors or for instructions to the end user), a specific view is created. This can be used as follows:
+  ```js
+  function showMessage() {
+    cordova.plugin.rsacertificate.showMessage({
+      title: "Message Title",
+      message: "The message content",
+      backgroundColorHex: "FFFFFF",
+      textColorHex: "000000"
+    });
+  }
+  ```
+
 For security reasons you may need to remove data files or the certificate. The following functions can be used for that.
 
 - Data Files Only
@@ -238,7 +250,12 @@ For security reasons you may need to remove data files or the certificate. The f
           if (newCertificateInstalled) {
             cordova.plugin.rsacertificate.deleteDataFiles(
               function() {
-                alert("Successfully installed the new cerficate!\n\nPlease select a data file and use the Open in... functionality in order to use this application.")
+                cordova.plugin.rsacertificate.showMessage({
+                  title: "Certificate",
+                  message: "Successfully installed the new cerficate!\n\nPlease select a data file and use the Open in... functionality in order to use this application.",
+                  backgroundColorHex: "FFFFFF",
+                  textColorHex: "000000"
+                });          
               }
             )
           } else  {
@@ -246,7 +263,12 @@ For security reasons you may need to remove data files or the certificate. The f
           }
         }.bind(this),
         function (errorMessage) {
-          alert("Error: " + errorMessage)
+          cordova.plugin.rsacertificate.showMessage({
+            title: "Error",
+            message: errorMessage,
+            backgroundColorHex: "FFFFFF",
+            textColorHex: "000000"
+          }); 
         }
       )
     }
@@ -258,7 +280,12 @@ For security reasons you may need to remove data files or the certificate. The f
           alert(fileContent)
         },
         function (errorMessage) {
-          alert("Error: " + errorMessage)
+          cordova.plugin.rsacertificate.showMessage({
+            title: "Error",
+            message: errorMessage,
+            backgroundColorHex: "FFFFFF",
+            textColorHex: "000000"
+          }); 
         }
       )
     }

@@ -390,7 +390,23 @@ import CryptoSwift
 
 
 
+  /**
+   Show No Data Message
+   **/
+  @objc(showMessage:)
+  public func showMessage(command: CDVInvokedUrlCommand) {
+    let userParams  = command.arguments[0] as? NSDictionary ?? [:]
 
+    let sb = UIStoryboard(name: "MessageScreen", bundle: nil)
+    let vc = sb.instantiateViewController(withIdentifier: "MessageScreenStoryboard") as! MessageScreenViewController
+
+    // set styling based on the parameters
+    vc.setStyling(params: userParams)
+
+    DispatchQueue.main.async {
+      self.viewController!.present(vc as UIViewController, animated: false, completion: nil)
+    }
+  }
 
 
 
@@ -475,6 +491,7 @@ import CryptoSwift
           effectView.removeFromSuperview()
         }
 
+        // show no data file screen
         self.commandDelegate!.send(
           CDVPluginResult(
             status    : CDVCommandStatus_OK

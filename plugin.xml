@@ -112,15 +112,17 @@
             </array>
         </config-file>
 
+        <resource-file src="src/ios/MessageScreen.storyboard"  target-dir="RSACertificate" />
+
         <source-file src="src/ios/RSACertificatePlugin.swift" />
         <source-file src="src/ios/AESHelper.swift" target-dir="RSACertificate" />
         <source-file src="src/ios/AlertService.swift"  target-dir="RSACertificate" />
         <source-file src="src/ios/ApplicationParameters.swift"  target-dir="RSACertificate" />
         <source-file src="src/ios/FileService.swift"  target-dir="RSACertificate" />
-
-
+        <source-file src="src/ios/Message.swift"  target-dir="RSACertificate" />
         <source-file src="src/ios/CryptoSwift" />
         <source-file src="src/ios/CryptoSwift.xcodeproj" target-dir="./CryptoSwift" />
+
         <framework src="Security.framework" />
         <framework src="src/ios/CryptoSwift.framework" embed="true" custom="true" />
     </platform>

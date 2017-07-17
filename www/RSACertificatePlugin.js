@@ -19,3 +19,7 @@ exports.deleteDataFiles = function(success, error) {
 exports.cleanup = function(success, error) {
     exec(success, error, 'RSACertificatePlugin', 'cleanup', []);
 };
+
+exports.showMessage = function(arg0, success, error) {
+    exec(success, error, 'RSACertificatePlugin', 'showMessage', [arg0]);
+};

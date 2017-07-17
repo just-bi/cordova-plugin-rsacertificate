@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12121" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="ipad9_7" orientation="landscape">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Message Screen View Controller-->
+        <scene sceneID="TqW-7K-Pjp">
+            <objects>
+                <viewController storyboardIdentifier="MessageScreenStoryboard" id="rtE-2w-Thi" customClass="MessageScreenViewController" customModule="MyInsight" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="RGi-8k-PT6"/>
+                        <viewControllerLayoutGuide type="bottom" id="If4-wh-Y3R"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="Fd1-MM-pux">
+                        <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Title" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SfC-hF-X1P">
+                                <rect key="frame" x="481" y="120" width="62.5" height="36"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="30"/>
+                                <color key="textColor" red="0.86666666670000003" green="0.1137254902" blue="0.12941176469999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Message" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="5" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="09c-hh-ePZ">
+                                <rect key="frame" x="312" y="186" width="400" height="16"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="400" id="Zhr-vB-Rsc"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                <color key="textColor" red="0.86666666670000003" green="0.1137254902" blue="0.12941176469999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="09c-hh-ePZ" firstAttribute="centerX" secondItem="Fd1-MM-pux" secondAttribute="centerX" id="EWd-aw-QdZ"/>
+                            <constraint firstItem="09c-hh-ePZ" firstAttribute="top" secondItem="SfC-hF-X1P" secondAttribute="bottom" constant="30" id="SsB-xB-F5R"/>
+                            <constraint firstItem="SfC-hF-X1P" firstAttribute="centerX" secondItem="Fd1-MM-pux" secondAttribute="centerX" id="XGj-Fs-aDy"/>
+                            <constraint firstItem="SfC-hF-X1P" firstAttribute="top" secondItem="RGi-8k-PT6" secondAttribute="bottom" constant="100" id="l7T-MY-KTy"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="lblMessage" destination="09c-hh-ePZ" id="kDz-nW-yMA"/>
+                        <outlet property="lblTitle" destination="SfC-hF-X1P" id="74o-MI-SIc"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="MyF-69-KgZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-18" y="139"/>
+        </scene>
+    </scenes>
+</document>
