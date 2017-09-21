@@ -449,8 +449,8 @@ import CryptoSwift
       activityIndicator.frame = CGRect(x: 0, y: strLabel.frame.height/2 - 23, width: 46, height: 46)
       activityIndicator.startAnimating()
 
-      effectView.addSubview(activityIndicator)
-      effectView.addSubview(strLabel)
+      effectView.contentView.addSubview(activityIndicator)
+      effectView.contentView.addSubview(strLabel)
       self.webView.addSubview(effectView)
     }
 
