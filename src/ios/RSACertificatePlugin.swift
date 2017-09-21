@@ -222,10 +222,12 @@ import CryptoSwift
     }
 
     // Get the password for the certificate
-    askForCertificatePassword(
-      onPasswordEntered : onCertificatePasswordProvided,
-      onImportDone      : onImportDone
-    )
+    DispatchQueue.main.async {
+        self.askForCertificatePassword(
+          onPasswordEntered : onCertificatePasswordProvided,
+          onImportDone      : onImportDone
+        )
+    }
   }
 
 
