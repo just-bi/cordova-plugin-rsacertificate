@@ -119,6 +119,7 @@
         <source-file src="src/ios/AlertService.swift"  target-dir="RSACertificate" />
         <source-file src="src/ios/ApplicationParameters.swift"  target-dir="RSACertificate" />
         <source-file src="src/ios/FileService.swift"  target-dir="RSACertificate" />
+        <source-file src="src/ios/CommonService.swift" target-dir="RSACertificate" />
         <source-file src="src/ios/Message.swift"  target-dir="RSACertificate" />
         <source-file src="src/ios/CryptoSwift" />
         <source-file src="src/ios/CryptoSwift.xcodeproj" target-dir="./CryptoSwift" />
