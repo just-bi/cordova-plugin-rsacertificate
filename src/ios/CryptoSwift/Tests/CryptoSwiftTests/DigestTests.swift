@@ -3,7 +3,7 @@
 //  CryptoSwiftTests
 //
 //  Created by Marcin Krzyzanowski on 06/07/14.
-//  Copyright (C) 2014-2017 Krzyzanowski. All rights reserved.
+//  Copyright (c) 2014 Marcin Krzyzanowski. All rights reserved.
 //
 // http://www.di-mgt.com.au/sha_testvectors.html (http://csrc.nist.gov/groups/ST/toolkit/documents/Examples/SHA_All.pdf)
 //

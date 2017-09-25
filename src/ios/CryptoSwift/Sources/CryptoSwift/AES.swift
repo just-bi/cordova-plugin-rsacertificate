@@ -2,18 +2,9 @@
 //  AES.swift
 //  CryptoSwift
 //
-//  Copyright (C) 2014-2017 Krzyżanowski <marcin@krzyzanowskim.com>
-//  This software is provided 'as-is', without any express or implied warranty.
+//  Created by Marcin Krzyzanowski on 21/11/14.
+//  Copyright (c) 2014 Marcin Krzyzanowski. All rights reserved.
 //
-//  In no event will the authors be held liable for any damages arising from the use of this software.
-//
-//  Permission is granted to anyone to use this software for any purpose,including commercial applications, and to alter it and redistribute it freely, subject to the following restrictions:
-//
-//  - The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation is required.
-//  - Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
-//  - This notice may not be removed or altered from any source or binary distribution.
-//
-
 //  Implementation of Gladman algorithm http://www.gladman.me.uk/AES
 //
 
@@ -206,13 +197,12 @@ fileprivate extension AES {
         b2 = F1(t[2], t[3], t[0], t[1]) ^ rk[rounds][2]
         b3 = F1(t[3], t[0], t[1], t[2]) ^ rk[rounds][3]
 
-        let encrypted: Array<UInt8> = [
+        return [
             UInt8(b0 & 0xFF),UInt8((b0 >> 8) & 0xFF),UInt8((b0 >> 16) & 0xFF),UInt8((b0 >> 24) & 0xFF),
             UInt8(b1 & 0xFF),UInt8((b1 >> 8) & 0xFF),UInt8((b1 >> 16) & 0xFF),UInt8((b1 >> 24) & 0xFF),
             UInt8(b2 & 0xFF),UInt8((b2 >> 8) & 0xFF),UInt8((b2 >> 16) & 0xFF),UInt8((b2 >> 24) & 0xFF),
             UInt8(b3 & 0xFF),UInt8((b3 >> 8) & 0xFF),UInt8((b3 >> 16) & 0xFF),UInt8((b3 >> 24) & 0xFF)
-        ]
-        return encrypted
+        ] as Array<UInt8>
     }
 
     func decrypt(block: Array<UInt8>) -> Array<UInt8>? {
@@ -307,14 +297,19 @@ fileprivate extension AES {
         var rk2: Array<Array<UInt32>> = expandKey(key, variant: variant)
 
         for r in 1 ..< rounds {
-            for i in 0..<4 {
-                let w = rk2[r][i]
-                let u1 = U1[Int(B0(w))]
-                let u2 = U2[Int(B1(w))]
-                let u3 = U3[Int(B2(w))]
-                let u4 = U4[Int(B3(w))]
-                rk2[r][i] = u1^u2^u3^u4
-            }
+            var w: UInt32
+
+            w = rk2[r][0]
+            rk2[r][0] = U1[Int(B0(w))] ^ U2[Int(B1(w))] ^ U3[Int(B2(w))] ^ U4[Int(B3(w))]
+
+            w = rk2[r][1]
+            rk2[r][1] = U1[Int(B0(w))] ^ U2[Int(B1(w))] ^ U3[Int(B2(w))] ^ U4[Int(B3(w))]
+
+            w = rk2[r][2]
+            rk2[r][2] = U1[Int(B0(w))] ^ U2[Int(B1(w))] ^ U3[Int(B2(w))] ^ U4[Int(B3(w))]
+
+            w = rk2[r][3]
+            rk2[r][3] = U1[Int(B0(w))] ^ U2[Int(B1(w))] ^ U3[Int(B2(w))] ^ U4[Int(B3(w))]
         }
 
         return rk2
@@ -552,7 +547,7 @@ extension AES: Cryptors {
 // MARK: Cipher
 extension AES: Cipher {
 
-    public func encrypt<C: Collection>(_ bytes: C) throws -> Array<UInt8> where C.Element == UInt8, C.IndexDistance == Int, C.Index == Int, C.SubSequence: Collection {
+    public func encrypt<C: Collection>(_ bytes: C) throws -> Array<UInt8> where C.Iterator.Element == UInt8, C.IndexDistance == Int, C.Index == Int, C.SubSequence: Collection, C.SubSequence.Iterator.Element == C.Iterator.Element {
         let chunks = bytes.batched(by: AES.blockSize)
 
         var oneTimeCryptor = self.makeEncryptor()
@@ -571,7 +566,7 @@ extension AES: Cipher {
         return out
     }
 
-    public func decrypt<C: Collection>(_ bytes: C) throws -> Array<UInt8> where C.Element == UInt8, C.IndexDistance == Int, C.Index == Int, C.SubSequence: Collection {
+    public func decrypt<C: Collection>(_ bytes: C) throws -> Array<UInt8> where C.Iterator.Element == UInt8, C.IndexDistance == Int, C.Index == Int, C.SubSequence: Collection, C.SubSequence.Iterator.Element == C.Iterator.Element {
         if blockMode.options.contains(.PaddingRequired) && (bytes.count % AES.blockSize != 0) {
             throw Error.dataPaddingRequired
         }

@@ -3,7 +3,7 @@
 //  CryptoSwift
 //
 //  Created by Marcin Krzyzanowski on 27/12/14.
-//  Copyright (C) 2014-2017 Krzyzanowski. All rights reserved.
+//  Copyright (c) 2014 Marcin Krzyzanowski. All rights reserved.
 //
 import XCTest
 import Foundation
