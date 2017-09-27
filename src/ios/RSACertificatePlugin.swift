@@ -193,8 +193,7 @@ import CryptoSwift
       let deleteQuery: [String: Any] = [
         kSecClass               as String: kSecClassKey,
         kSecAttrType            as String: kSecAttrKeyTypeRSA,
-        kSecAttrKeyClass        as String: kSecAttrKeyClassPrivate,
-        kSecAttrApplicationTag  as String: AppParams.cSecAttrApplicationTag
+        kSecAttrKeyClass        as String: kSecAttrKeyClassPrivate
       ]
       SecItemDelete(deleteQuery as CFDictionary)
 
@@ -204,8 +203,7 @@ import CryptoSwift
         kSecClass               as String: kSecClassKey,
         kSecValueRef            as String: privateKey!,
         kSecAttrType            as String: kSecAttrKeyTypeRSA,
-        kSecAttrKeyClass        as String: kSecAttrKeyClassPrivate,
-        kSecAttrApplicationTag  as String: AppParams.cSecAttrApplicationTag
+        kSecAttrKeyClass        as String: kSecAttrKeyClassPrivate
       ]
       let statusStorePrivateKey = SecItemAdd(addQuery as CFDictionary, nil)
       guard statusStorePrivateKey == errSecSuccess else {
@@ -383,8 +381,7 @@ import CryptoSwift
     let deleteQuery: [String: Any] = [
       kSecClass               as String: kSecClassKey,
       kSecAttrType            as String: kSecAttrKeyTypeRSA,
-      kSecAttrKeyClass        as String: kSecAttrKeyClassPrivate,
-      kSecAttrApplicationTag  as String: AppParams.cSecAttrApplicationTag
+      kSecAttrKeyClass        as String: kSecAttrKeyClassPrivate
     ]
     SecItemDelete(deleteQuery as CFDictionary)
 
@@ -618,7 +615,6 @@ import CryptoSwift
       kSecClass               as String: kSecClassKey,
       kSecAttrType            as String: kSecAttrKeyTypeRSA,
       kSecAttrKeyClass        as String: kSecAttrKeyClassPrivate,
-      kSecAttrApplicationTag  as String: AppParams.cSecAttrApplicationTag,
       kSecReturnRef           as String: kCFBooleanTrue,
       ]
 
@@ -737,5 +733,4 @@ import CryptoSwift
     )
 
   }
-
 }
