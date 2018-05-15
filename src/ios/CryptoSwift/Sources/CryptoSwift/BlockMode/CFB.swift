@@ -1,8 +1,7 @@
 //
-//  CFB.swift
 //  CryptoSwift
 //
-//  Copyright (C) 2014-2017 Krzyżanowski <marcin@krzyzanowskim.com>
+//  Copyright (C) 2014-2017 Marcin Krzyżanowski <marcin@krzyzanowskim.com>
 //  This software is provided 'as-is', without any express or implied warranty.
 //
 //  In no event will the authors be held liable for any damages arising from the use of this software.
@@ -17,14 +16,34 @@
 //  Cipher feedback (CFB)
 //
 
+public struct CFB: BlockMode {
+    public enum Error: Swift.Error {
+        /// Invalid IV
+        case invalidInitializationVector
+    }
+
+    public let options: BlockModeOptions = [.initializationVectorRequired, .useEncryptToDecrypt]
+    private let iv: Array<UInt8>
+
+    public init(iv: Array<UInt8>) {
+        self.iv = iv
+    }
+
+    public func worker(blockSize: Int, cipherOperation: @escaping CipherOperationOnBlock) throws -> BlockModeWorker {
+        if iv.count != blockSize {
+            throw Error.invalidInitializationVector
+        }
+
+        return CFBModeWorker(iv: iv.slice, cipherOperation: cipherOperation)
+    }
+}
+
 struct CFBModeWorker: BlockModeWorker {
-    typealias Element = Array<UInt8>
-
     let cipherOperation: CipherOperationOnBlock
-    private let iv: Element
-    private var prev: Element?
+    private let iv: ArraySlice<UInt8>
+    private var prev: ArraySlice<UInt8>?
 
-    init(iv: Array<UInt8>, cipherOperation: @escaping CipherOperationOnBlock) {
+    init(iv: ArraySlice<UInt8>, cipherOperation: @escaping CipherOperationOnBlock) {
         self.iv = iv
         self.cipherOperation = cipherOperation
     }
@@ -33,16 +52,16 @@ struct CFBModeWorker: BlockModeWorker {
         guard let ciphertext = cipherOperation(prev ?? iv) else {
             return Array(plaintext)
         }
-        prev = xor(plaintext, ciphertext)
-        return prev ?? []
+        prev = xor(plaintext, ciphertext.slice)
+        return Array(prev ?? [])
     }
 
     mutating func decrypt(_ ciphertext: ArraySlice<UInt8>) -> Array<UInt8> {
         guard let plaintext = cipherOperation(prev ?? iv) else {
             return Array(ciphertext)
         }
-        let result = xor(plaintext, ciphertext)
-        self.prev = Array(ciphertext)
+        let result: Array<UInt8> = xor(plaintext, ciphertext)
+        prev = ciphertext
         return result
     }
 }

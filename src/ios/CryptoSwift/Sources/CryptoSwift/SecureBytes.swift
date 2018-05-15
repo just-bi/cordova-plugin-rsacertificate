@@ -1,8 +1,7 @@
 //
-//  SecureBytes.swift
 //  CryptoSwift
 //
-//  Copyright (C) 2014-2017 Krzyżanowski <marcin@krzyzanowskim.com>
+//  Copyright (C) 2014-2017 Marcin Krzyżanowski <marcin@krzyzanowskim.com>
 //  This software is provided 'as-is', without any express or implied warranty.
 //
 //  In no event will the authors be held liable for any damages arising from the use of this software.
@@ -14,11 +13,13 @@
 //  - This notice may not be removed or altered from any source or binary distribution.
 //
 
-#if os(Linux) || os(Android) || os(FreeBSD)
-    import Glibc
+#if canImport(Darwin)
+import Darwin
 #else
-    import Darwin
+import Glibc
 #endif
+
+typealias Key = SecureBytes
 
 ///  Keeps bytes in memory. Because this is class, bytes are not copied
 ///  and memory area is locked as long as referenced, then unlocked on deinit
@@ -28,7 +29,7 @@ final class SecureBytes {
 
     init(bytes: Array<UInt8>) {
         self.bytes = bytes
-        self.count = bytes.count
+        count = bytes.count
         self.bytes.withUnsafeBufferPointer { (pointer) -> Void in
             mlock(pointer.baseAddress, pointer.count)
         }
@@ -45,27 +46,27 @@ extension SecureBytes: Collection {
     typealias Index = Int
 
     var endIndex: Int {
-        return self.bytes.endIndex
+        return bytes.endIndex
     }
 
     var startIndex: Int {
-        return self.bytes.startIndex
+        return bytes.startIndex
     }
 
     subscript(position: Index) -> UInt8 {
-        return self.bytes[position]
+        return bytes[position]
     }
 
     subscript(bounds: Range<Index>) -> ArraySlice<UInt8> {
-        return self.bytes[bounds]
+        return bytes[bounds]
     }
 
     func formIndex(after i: inout Int) {
-        self.bytes.formIndex(after: &i)
+        bytes.formIndex(after: &i)
     }
 
     func index(after i: Int) -> Int {
-        return self.bytes.index(after: i)
+        return bytes.index(after: i)
     }
 }
 

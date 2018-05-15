@@ -1,8 +1,7 @@
 //
-//  CTR.swift
 //  CryptoSwift
 //
-//  Copyright (C) 2014-2017 Krzyżanowski <marcin@krzyzanowskim.com>
+//  Copyright (C) 2014-2017 Marcin Krzyżanowski <marcin@krzyzanowskim.com>
 //  This software is provided 'as-is', without any express or implied warranty.
 //
 //  In no event will the authors be held liable for any damages arising from the use of this software.
@@ -17,14 +16,34 @@
 //  Counter (CTR)
 //
 
-struct CTRModeWorker: RandomAccessBlockModeWorker {
-    typealias Element = Array<UInt8>
+public struct CTR: BlockMode {
+    public enum Error: Swift.Error {
+        /// Invalid IV
+        case invalidInitializationVector
+    }
 
+    public let options: BlockModeOptions = [.initializationVectorRequired, .useEncryptToDecrypt]
+    private let iv: Array<UInt8>
+
+    public init(iv: Array<UInt8>) {
+        self.iv = iv
+    }
+
+    public func worker(blockSize: Int, cipherOperation: @escaping CipherOperationOnBlock) throws -> BlockModeWorker {
+        if iv.count != blockSize {
+            throw Error.invalidInitializationVector
+        }
+
+        return CTRModeWorker(iv: iv.slice, cipherOperation: cipherOperation)
+    }
+}
+
+struct CTRModeWorker: RandomAccessBlockModeWorker {
     let cipherOperation: CipherOperationOnBlock
-    private let iv: Element
+    private let iv: ArraySlice<UInt8>
     var counter: UInt = 0
 
-    init(iv: Array<UInt8>, cipherOperation: @escaping CipherOperationOnBlock) {
+    init(iv: ArraySlice<UInt8>, cipherOperation: @escaping CipherOperationOnBlock) {
         self.iv = iv
         self.cipherOperation = cipherOperation
     }
@@ -33,7 +52,7 @@ struct CTRModeWorker: RandomAccessBlockModeWorker {
         let nonce = buildNonce(iv, counter: UInt64(counter))
         counter = counter + 1
 
-        guard let ciphertext = cipherOperation(nonce) else {
+        guard let ciphertext = cipherOperation(nonce.slice) else {
             return Array(plaintext)
         }
 
@@ -45,10 +64,10 @@ struct CTRModeWorker: RandomAccessBlockModeWorker {
     }
 }
 
-private func buildNonce(_ iv: Array<UInt8>, counter: UInt64) -> Array<UInt8> {
-    let noncePartLen = AES.blockSize / 2
-    let noncePrefix = Array(iv[0 ..< noncePartLen])
-    let nonceSuffix = Array(iv[noncePartLen ..< iv.count])
+private func buildNonce(_ iv: ArraySlice<UInt8>, counter: UInt64) -> Array<UInt8> {
+    let noncePartLen = iv.count / 2
+    let noncePrefix = iv[iv.startIndex..<iv.startIndex.advanced(by: noncePartLen)]
+    let nonceSuffix = iv[iv.startIndex.advanced(by: noncePartLen)..<iv.startIndex.advanced(by: iv.count)]
     let c = UInt64(bytes: nonceSuffix) + counter
     return noncePrefix + c.bytes()
 }
