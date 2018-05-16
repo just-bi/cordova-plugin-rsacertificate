@@ -221,10 +221,10 @@ import CryptoSwift
 
     // Get the password for the certificate
     DispatchQueue.main.async {
-        self.askForCertificatePassword(
-          onPasswordEntered : onCertificatePasswordProvided,
-          onImportDone      : onImportDone
-        )
+      self.askForCertificatePassword(
+        onPasswordEntered : onCertificatePasswordProvided,
+        onImportDone      : onImportDone
+      )
     }
   }
 
@@ -461,7 +461,7 @@ import CryptoSwift
       // move the inbox data file to a generic name
       let inboxUrl = FileService.getPathToInboxFolder()
       let documentsUrl =  FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-      let encryptedFilePath = documentsUrl.appendingPathComponent(AppParams.cEncryptedDataFileName + ".\(rsaEncryptedFileExtension)")
+      let encryptedFilePath = documentsUrl.appendingPathComponent("___datafile___.\(rsaEncryptedFileExtension)")
       guard FileService.moveAllFilesInDirectoryWithExtensionToNewLocation(
         directoryPath : inboxUrl,
         fileExtension : rsaEncryptedFileExtension,
@@ -582,9 +582,6 @@ import CryptoSwift
   }
 
 
-
-
-
   /**
    RSA and AES
    The provided text is encrypted using the AES encryption technique. This type of encryption
@@ -685,7 +682,7 @@ import CryptoSwift
      **/
 
     // the password and the initialization vector should be of the same length
-    let passwordLength = aesPassAndIvString.characters.count / 2
+    let passwordLength = aesPassAndIvString.count / 2
 
 
     // the first part of the string is the password
@@ -709,28 +706,37 @@ import CryptoSwift
      4. AES DECRYPTION OF THE TEXT, USING PASSWORD AND INITIALIZATION VECTOR
      **/
 
-    // decrypt the message
-    let aesEncryptedMessageData = Data(base64Encoded: aesEncryptedMessageString)!
-    let messageBytes: [UInt8]   = try! AES(key: aesPassString, iv: aesIvSting, blockMode: .CFB).decrypt(aesEncryptedMessageData)
-    let messageData = Data(messageBytes)
+    do {
 
+      // decrypt the message (AES decryption)
+      // this is done via the CryptoSwift framework
+      let aes = try AES(key: Array(aesPassString.utf8), blockMode: CFB(iv: Array(aesIvSting.utf8)), padding: .pkcs7)
 
-    // cast the decrypted message from data to String
-    guard let messageString = String(bytes: messageData.bytes, encoding: .utf8)
-      else {
-        return (
-          success          : false,
-          errorMessage     : "Unable to cast the decrypted message bytes to string.",
-          decryptedMessage : ""
-        )
+      // convert the data into a string
+      let cipherdata = Data(base64Encoded: aesEncryptedMessageString);
+      let messageBytes = try aes.decrypt(cipherdata!.bytes)
+      guard let messageString = String(bytes: messageBytes, encoding: .utf8)
+        else {
+          return (
+            success          : false,
+            errorMessage     : "Unable to cast the decrypted message bytes to string.",
+            decryptedMessage : ""
+          )
+      }
+
+      return (
+        success          : true,
+        errorMessage     : "",
+        decryptedMessage : messageString
+      )
+
+    } catch {
+      return (
+        success          : false,
+        errorMessage     : "Unable to decrypt via AES",
+        decryptedMessage : ""
+      )
     }
-
-    // show the decrypted message in the interface
-    return (
-      success          : true,
-      errorMessage     : "",
-      decryptedMessage : messageString
-    )
 
   }
 }
