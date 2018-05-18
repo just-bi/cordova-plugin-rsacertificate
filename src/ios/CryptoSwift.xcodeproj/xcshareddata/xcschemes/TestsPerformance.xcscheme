@@ -17,7 +17,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "7595C1492072E48C00EA1A5F"
-               BuildableName = "TestsPerformance.xctest"
+               BuildableName = ".xctest"
                BlueprintName = "TestsPerformance"
                ReferencedContainer = "container:CryptoSwift.xcodeproj">
             </BuildableReference>

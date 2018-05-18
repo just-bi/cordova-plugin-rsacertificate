@@ -246,7 +246,7 @@
 		750CC3EA1DC0CACE0096BE6E /* BlowfishTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BlowfishTests.swift; sourceTree = "<group>"; };
 		75100F8E19B0BC890005C5F5 /* Poly1305Tests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Poly1305Tests.swift; sourceTree = "<group>"; };
 		751EE9771F93996100161FFC /* AES.Cryptors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AES.Cryptors.swift; sourceTree = "<group>"; };
-		75211F92207249D8004E41F8 /* CryptoSwift-TestHostApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "CryptoSwift-TestHostApp.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		75211F92207249D8004E41F8 /* CryptoSwift-TestHostApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = "CryptoSwift-TestHostApp.app"; path = .app; sourceTree = BUILT_PRODUCTS_DIR; };
 		75211F94207249D8004E41F8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		75211FA0207249D8004E41F8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		75211FA520724A0F004E41F8 /* CryptoSwift-TestHostApp-Test.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "CryptoSwift-TestHostApp-Test.xcconfig"; sourceTree = "<group>"; };
@@ -271,8 +271,8 @@
 		753B33001DAB84D600D06422 /* RandomBytesSequenceTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RandomBytesSequenceTests.swift; sourceTree = "<group>"; };
 		754310432050111A003FB1DF /* CompactMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompactMap.swift; sourceTree = "<group>"; };
 		75482EA31CB310B7001F66A5 /* PBKDF.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PBKDF.swift; sourceTree = "<group>"; };
-		754BE45519693E190098E6F3 /* CryptoSwift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CryptoSwift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		754BE46019693E190098E6F3 /* Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		754BE45519693E190098E6F3 /* CryptoSwift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = CryptoSwift.framework; path = .framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		754BE46019693E190098E6F3 /* Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; name = Tests.xctest; path = .xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		754BE46619693E190098E6F3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		754BE46719693E190098E6F3 /* DigestTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DigestTests.swift; sourceTree = "<group>"; };
 		755D27BC1D06DE6400C41692 /* CryptoSwift.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = CryptoSwift.playground; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
@@ -291,7 +291,7 @@
 		757DA2581A4ED4D7002BA3EF /* ChaCha20Tests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChaCha20Tests.swift; sourceTree = "<group>"; };
 		758A94271A65C59200E46135 /* HMACTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HMACTests.swift; sourceTree = "<group>"; };
 		758F95AA2072E8E10080D664 /* Bridging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Bridging.h; sourceTree = "<group>"; };
-		7595C14A2072E48C00EA1A5F /* TestsPerformance.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TestsPerformance.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		7595C14A2072E48C00EA1A5F /* TestsPerformance.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; name = TestsPerformance.xctest; path = .xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		7595C14C2072E48C00EA1A5F /* TestsPerformance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestsPerformance.swift; sourceTree = "<group>"; };
 		7595C14E2072E48C00EA1A5F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		75C2E76C1D55F097003D2BCA /* Access.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Access.swift; sourceTree = "<group>"; };

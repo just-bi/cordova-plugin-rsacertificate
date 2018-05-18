@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "754BE45419693E190098E6F3"
-               BuildableName = "CryptoSwift.framework"
+               BuildableName = ".framework"
                BlueprintName = "CryptoSwift"
                ReferencedContainer = "container:CryptoSwift.xcodeproj">
             </BuildableReference>
@@ -29,7 +29,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "754BE45F19693E190098E6F3"
-               BuildableName = "Tests.xctest"
+               BuildableName = ".xctest"
                BlueprintName = "Tests"
                ReferencedContainer = "container:CryptoSwift.xcodeproj">
             </BuildableReference>
@@ -50,7 +50,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "754BE45F19693E190098E6F3"
-               BuildableName = "Tests.xctest"
+               BuildableName = ".xctest"
                BlueprintName = "Tests"
                ReferencedContainer = "container:CryptoSwift.xcodeproj">
             </BuildableReference>
@@ -60,7 +60,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "7595C1492072E48C00EA1A5F"
-               BuildableName = "TestsPerformance.xctest"
+               BuildableName = ".xctest"
                BlueprintName = "TestsPerformance"
                ReferencedContainer = "container:CryptoSwift.xcodeproj">
             </BuildableReference>
@@ -80,7 +80,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "754BE45419693E190098E6F3"
-            BuildableName = "CryptoSwift.framework"
+            BuildableName = ".framework"
             BlueprintName = "CryptoSwift"
             ReferencedContainer = "container:CryptoSwift.xcodeproj">
          </BuildableReference>
@@ -102,7 +102,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "754BE45419693E190098E6F3"
-            BuildableName = "CryptoSwift.framework"
+            BuildableName = ".framework"
             BlueprintName = "CryptoSwift"
             ReferencedContainer = "container:CryptoSwift.xcodeproj">
          </BuildableReference>
@@ -120,7 +120,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "754BE45419693E190098E6F3"
-            BuildableName = "CryptoSwift.framework"
+            BuildableName = ".framework"
             BlueprintName = "CryptoSwift"
             ReferencedContainer = "container:CryptoSwift.xcodeproj">
          </BuildableReference>
