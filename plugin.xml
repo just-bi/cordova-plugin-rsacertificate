@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
-<plugin id="cordova-plugin-rsacertificate" version="0.0.1" 
-    xmlns="http://apache.org/cordova/ns/plugins/1.0" 
+<plugin id="cordova-plugin-rsacertificate" version="0.0.1"
+    xmlns="http://apache.org/cordova/ns/plugins/1.0"
     xmlns:android="http://schemas.android.com/apk/res/android">
     <name>RSACertificatePlugin</name>
     <description>Allows importing a RSA certificate holding a private key (.p12) and decrypting data using this RSA private key.</description>
@@ -10,7 +10,7 @@
     <engines>
         <engine name="cordova" version=">3.0.0" />
     </engines>
-    <dependency id="cordova-plugin-add-swift-support" />
+    <dependency id="cordova-plugin-add-swift-support" version="1.7.2"/>
     <js-module name="RSACertificatePlugin" src="www/RSACertificatePlugin.js">
         <clobbers target="cordova.plugin.rsacertificate" />
     </js-module>
